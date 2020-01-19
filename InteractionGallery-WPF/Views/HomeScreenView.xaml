@@ -1,0 +1,201 @@
+﻿<UserControl x:Class="Microsoft.Samples.Kinect.InteractionGallery.Views.HomeScreenView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:k="http://schemas.microsoft.com/kinect/2013"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:c="clr-namespace:Microsoft.Samples.Kinect.InteractionGallery.Controls"
+             xmlns:m="clr-namespace:Microsoft.Samples.Kinect.InteractionGallery.Models"
+             xmlns:u="clr-namespace:Microsoft.Samples.Kinect.InteractionGallery.Utilities"
+             xmlns:local="clr-namespace:Microsoft.Samples.Kinect.ControlsBasics"
+             Background="Black"
+             u:VisualStateHelper.VisualStateProperty="{Binding VisualStateName}">
+
+    <UserControl.Resources>
+        <PathGeometry x:Key="ChevronGeometry" x:Shared="False">
+            F1M150.001,146.9932L126.565,169.3822L126.565,153.5962L150.001,130.6182L173.435,153.5962L173.435,169.3822z
+        </PathGeometry>
+
+        <Path x:Key="ChevronUp" Height="48" Width="48" Stretch="Uniform" Canvas.Top="0" x:Shared="False"
+          Data="{StaticResource ChevronGeometry}"
+          Fill="{Binding FallbackValue=Black, Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:KinectHoverButton}}}">
+            <Path.RenderTransformOrigin>0.5,0.5</Path.RenderTransformOrigin>
+            <Path.RenderTransform>
+                <RotateTransform Angle="0"/>
+            </Path.RenderTransform>
+        </Path>
+
+        <Path x:Key="ChevronRight" Height="48" Width="48" Stretch="Uniform" Canvas.Top="0" x:Shared="False"
+          Data="{StaticResource ChevronGeometry}"
+          Fill="{Binding FallbackValue=Black, Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:KinectHoverButton}}}">
+            <Path.RenderTransformOrigin>0.5,0.5</Path.RenderTransformOrigin>
+            <Path.RenderTransform>
+                <RotateTransform Angle="90"/>
+            </Path.RenderTransform>
+        </Path>
+
+        <Path x:Key="ChevronDown" Height="48" Width="48" Stretch="Uniform" Canvas.Top="0" x:Shared="False"
+          Data="{StaticResource ChevronGeometry}"
+          Fill="{Binding FallbackValue=Black, Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:KinectHoverButton}}}">
+            <Path.RenderTransformOrigin>0.5,0.5</Path.RenderTransformOrigin>
+            <Path.RenderTransform>
+                <RotateTransform Angle="180"/>
+            </Path.RenderTransform>
+        </Path>
+
+        <Path x:Key="ChevronLeft" Height="48" Width="48" Stretch="Uniform" Canvas.Top="0" x:Shared="False"
+          Data="{StaticResource ChevronGeometry}"
+          Fill="{Binding FallbackValue=Black, Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type local:KinectHoverButton}}}">
+            <Path.RenderTransformOrigin>0.5,0.5</Path.RenderTransformOrigin>
+            <Path.RenderTransform>
+                <RotateTransform Angle="270"/>
+            </Path.RenderTransform>
+        </Path>
+
+        <Style x:Key="KinectHoverButtonStyle" TargetType="{x:Type local:KinectHoverButton}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type local:KinectHoverButton}">
+                        <Grid Background="{TemplateBinding Background}" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                                <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{TemplateBinding Content}"></ContentPresenter>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="LightGray"/>
+                    <Setter Property="BorderBrush" Value="LightGray"/>
+                    <Setter Property="Background" Value="Transparent"></Setter>
+                </Trigger>
+                <Trigger Property="IsHandPointerOver" Value="True">
+                    <Setter Property="Background" Value="#5A5B5B"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="KinectHoverButtonScrollUpStyle" TargetType="{x:Type local:KinectHoverButton}" BasedOn="{StaticResource KinectHoverButtonStyle}">
+            <Setter Property="Content" Value="{StaticResource ChevronUp}"/>
+        </Style>
+
+        <Style x:Key="KinectHoverButtonScrollRightStyle" TargetType="{x:Type local:KinectHoverButton}" BasedOn="{StaticResource KinectHoverButtonStyle}">
+            <Setter Property="Content" Value="{StaticResource ChevronRight}"/>
+        </Style>
+
+        <Style x:Key="KinectHoverButtonScrollDownStyle" TargetType="{x:Type local:KinectHoverButton}" BasedOn="{StaticResource KinectHoverButtonStyle}">
+            <Setter Property="Content" Value="{StaticResource ChevronDown}"/>
+        </Style>
+
+        <Style x:Key="KinectHoverButtonScrollLeftStyle" TargetType="{x:Type local:KinectHoverButton}" BasedOn="{StaticResource KinectHoverButtonStyle}">
+            <Setter Property="Content" Value="{StaticResource ChevronLeft}"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <!--<ContentPresenter Content="{Binding NavigationManager}" />-->
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="43*"/>
+                <ColumnDefinition Width="57*"/>
+            </Grid.ColumnDefinitions>
+            <!--<Grid.RowDefinitions>
+                <RowDefinition Height="592*"/>
+                <RowDefinition Height="261*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>-->
+
+            <!--<Image Source="D:\kinectGallery\InteractionGallery-WPF\Content\ArticleScreen\01.png" Grid.RowSpan="2"/>-->
+            <!--<Image Source= "{Binding CurrentImage}" Grid.RowSpan="2" Stretch="Fill"/>-->
+            <c:TransitioningContentControl
+                x:Name="AttractCarousel"
+                Content="{Binding CurrentImage}"
+                Transition="None" Width="800" Height="1080" Grid.ColumnSpan="2">
+            </c:TransitioningContentControl>
+
+            <!--<local:KinectHoverButton x:Name="LeftButton" Style="{StaticResource KinectHoverButtonScrollLeftStyle}" Grid.Column="0" Click="PageLeftButtonClick" IsEnabled="{Binding ElementName=ControlsBasicsWindow, Path=PageLeftEnabled}" Width="180" Margin="48,0,0,349" HorizontalAlignment="Left" RenderTransformOrigin="0.062,0.506" Height="181" VerticalAlignment="Bottom"/>
+            <local:KinectHoverButton x:Name="RightButton" Style="{StaticResource KinectHoverButtonScrollRightStyle}" Click="PageRightButtonClick" IsEnabled="{Binding ElementName=ControlsBasicsWindow, Path=PageRightEnabled}" Height="193" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="180" Margin="0,0,74,349" Grid.Column="1"/>-->
+
+            <local:KinectHoverButton x:Name="OogtestHover" Style="{StaticResource KinectHoverButtonScrollLeftStyle}" IsEnabled="{Binding ElementName=ControlsBasicsWindow, Path=PageRightEnabled}" Height="193" VerticalAlignment="Bottom" Margin="460,0,95.8,0" Click="OogtestHover_click" Opacity="0" Background="Yellow" HorizontalAlignment="Left" hoverOnly="True" Width="350"/>
+            <local:KinectHoverButton x:Name="OogtestClick" Style="{StaticResource KinectHoverButtonScrollLeftStyle}" IsEnabled="{Binding ElementName=ControlsBasicsWindow, Path=PageRightEnabled}" Height="120" VerticalAlignment="Bottom" Margin="400,0,0,-5" Click="OogtestClick_click" Opacity="0" Background="Green" HorizontalAlignment="Left" Width="250" Grid.ColumnSpan="2" />
+            <local:KinectHoverButton x:Name="CityClick" Style="{StaticResource KinectHoverButtonScrollLeftStyle}" IsEnabled="{Binding ElementName=ControlsBasicsWindow, Path=PageRightEnabled}" Margin="0,94,400,0" Click="CityClick_click" Opacity="0" Background="Red" Height="138" VerticalAlignment="Top" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="655" />
+            <local:KinectHoverButton x:Name="CityConfirmClick" Style="{StaticResource KinectHoverButtonScrollLeftStyle}" IsEnabled="{Binding ElementName=ControlsBasicsWindow, Path=PageRightEnabled}" Height="91" VerticalAlignment="Bottom" Margin="300,0,-140.8,38" Click="CityConfirmClick_click" Opacity="0" Background="Red" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="1000" />
+            <local:KinectHoverButton x:Name="HomeClick" Style="{StaticResource KinectHoverButtonScrollLeftStyle}" IsEnabled="{Binding ElementName=ControlsBasicsWindow, Path=PageRightEnabled}" Height="150" VerticalAlignment="Top" Margin="320,120,-140.8,38" Click="HomeButton_click" Opacity="0" Background="Orange" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="150" />
+            <local:KinectHoverButton x:Name="DoneClick" Style="{StaticResource KinectHoverButtonScrollLeftStyle}" IsEnabled="{Binding ElementName=ControlsBasicsWindow, Path=PageRightEnabled}" Height="91" VerticalAlignment="Bottom" Margin="300,0,-140.8,38" Click="HomeButton_click" Opacity="0" Background="Blue" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="1000" />
+
+
+            <!-- Optional semi-transparent overlay image -->
+            <!--<Grid Background="#5A5B5B" Opacity="0.8">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding OverlayImageUri}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Image Source="{Binding OverlayImageUri, TargetNullValue={x:Null}}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Margin="0, 0, 0, 74" />
+            </Grid>-->
+            <!--<Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 10, 0, 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <local:KinectHoverButton Grid.Column="0" Style="{StaticResource KinectHoverButtonScrollLeftStyle}" Click="PageLeftButtonClick" IsEnabled="{Binding ElementName=ControlsBasicsWindow, Path=PageLeftEnabled}"/>
+                <local:KinectHoverButton Grid.Column="2" Style="{StaticResource KinectHoverButtonScrollRightStyle}" Click="PageRightButtonClick" IsEnabled="{Binding ElementName=ControlsBasicsWindow, Path=PageRightEnabled}"/>
+            </Grid>-->
+        </Grid>
+
+
+        <!--<k:KinectItemsControl VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0, 0, 0, 0" MinHeight="660"
+                              Orientation="Horizontal" ItemsSource="{Binding Experiences}" LabelMemberPath="Name" ItemContainerStyle="{StaticResource LargeKinectTileButton}">
+            <u:CommandOnEventHelper.AssociationEntry>
+                <u:CommandOnEventAssociation Command="{Binding ExperienceSelectedCommand}" Event="ItemClick"/>
+            </u:CommandOnEventHelper.AssociationEntry>-->
+        <!--<k:KinectItemsControl.Template>
+                -->
+        <!-- Re-template the KinectItemsControl to not have a KinectScrollViewer but keep everything else it has -->
+        <!--
+                <ControlTemplate TargetType="{x:Type ItemsControl}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                        <ItemsPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Border>
+                </ControlTemplate>
+            </k:KinectItemsControl.Template>-->
+        <!--<k:KinectItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Image Source="{Binding ImageUri}" />
+                        -->
+        <!-- Optional semi-transparent overlay image -->
+        <!--
+                        <Grid Background="#5A5B5B" Opacity="0.8">
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding OverlayImageUri}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <Image Source="{Binding OverlayImageUri, TargetNullValue={x:Null}}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Margin="0, 0, 0, 74" />
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </k:KinectItemsControl.ItemTemplate>-->
+        <!--</k:KinectItemsControl>-->
+    </Grid>
+</UserControl>
